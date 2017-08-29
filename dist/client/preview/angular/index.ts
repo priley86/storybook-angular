@@ -1,14 +1,19 @@
-import { enableProdMode, NgModule, Component } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { BrowserModule } from '@angular/platform-browser';
-import { AppComponent } from './app.component';
-import { ErrorComponent } from './error.component';
-import { NoPreviewComponent } from './no-preview.component';
-import { STORY } from './app.token';
+import {
+  enableProdMode,
+  NgModule,
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA
+} from "@angular/core";
+import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
+import { BrowserModule } from "@angular/platform-browser";
+import { AppComponent } from "./app.component";
+import { ErrorComponent } from "./error.component";
+import { NoPreviewComponent } from "./no-preview.component";
+import { STORY } from "./app.token";
 
 const getComponent = ({ component, props = {} }) => {
-  if (!component || typeof component !== 'function')
-    throw new Error('No valid component provided');
+  if (!component || typeof component !== "function")
+    throw new Error("No valid component provided");
 
   const componentMeta = component.__annotations__[0];
   const propsMeta = component.__prop__metadata__ || {};
@@ -17,32 +22,29 @@ const getComponent = ({ component, props = {} }) => {
     props,
     componentMeta,
     propsMeta
-  }
-}
+  };
+};
 
 const getAnnotatedComponent = (meta, component) => {
   @Component(meta)
   class NewComponent extends component {}
 
   return NewComponent;
-}
+};
 
 const getModule = (declarations, entryComponents, bootstrap, data) => {
   @NgModule({
     declarations,
-    imports: [
-      BrowserModule,
-    ],
-    providers: [
-       { provide: STORY, useValue: data }
-    ],
+    imports: [BrowserModule],
+    providers: [{ provide: STORY, useValue: data }],
     entryComponents,
     bootstrap,
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
   })
   class NewModule {}
 
   return NewModule;
-}
+};
 
 export function renderNgError(error) {
   const errorData = {
@@ -52,33 +54,23 @@ export function renderNgError(error) {
       stack: error.stack
     },
     propsMeta: {}
-  }
+  };
 
-  const Module = getModule(
-    [ErrorComponent],
-    [],
-    [ErrorComponent],
-    errorData
-  );
+  const Module = getModule([ErrorComponent], [], [ErrorComponent], errorData);
 
   try {
     enableProdMode();
-  } catch(e) {}
+  } catch (e) {}
 
   platformBrowserDynamic().bootstrapModule(Module);
 }
 
 export function renderNoPreviewComponent() {
-  const Module = getModule(
-    [NoPreviewComponent],
-    [],
-    [NoPreviewComponent],
-    {}
-  );
+  const Module = getModule([NoPreviewComponent], [], [NoPreviewComponent], {});
 
   try {
     enableProdMode();
-  } catch(e) {}
+  } catch (e) {}
 
   platformBrowserDynamic().bootstrapModule(Module);
 }
@@ -86,15 +78,14 @@ export function renderNoPreviewComponent() {
 export function renderNgApp(element) {
   const { component, componentMeta, props, propsMeta } = getComponent(element);
 
-  if (!componentMeta)
-    throw new Error('No component metadata available');
+  if (!componentMeta) throw new Error("No component metadata available");
 
-  const AnnotatedComponent = getAnnotatedComponent(componentMeta, component); 
+  const AnnotatedComponent = getAnnotatedComponent(componentMeta, component);
   const story = {
     component: AnnotatedComponent,
     props,
     propsMeta
-  }
+  };
   const Module = getModule(
     [AppComponent, AnnotatedComponent],
     [AnnotatedComponent],
@@ -104,7 +95,7 @@ export function renderNgApp(element) {
 
   try {
     enableProdMode();
-  } catch(e) {}
+  } catch (e) {}
 
   platformBrowserDynamic().bootstrapModule(Module);
 }
