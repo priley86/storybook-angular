@@ -24,6 +24,8 @@ var _inherits2 = require('babel-runtime/helpers/inherits');
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
+var _global = require('global');
+
 var _qs = require('qs');
 
 var _qs2 = _interopRequireDefault(_qs);
@@ -47,8 +49,6 @@ var _preview = require('./preview');
 var _preview2 = _interopRequireDefault(_preview);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/* global location */
 
 var ReactProvider = function (_Provider) {
   (0, _inherits3.default)(ReactProvider, _Provider);
@@ -77,7 +77,7 @@ var ReactProvider = function (_Provider) {
       };
 
       // Add the react-perf query string to the iframe if that present.
-      if (/react_perf/.test(location.search)) {
+      if (/react_perf/.test(_global.location.search)) {
         queryParams.react_perf = '1';
       }
 

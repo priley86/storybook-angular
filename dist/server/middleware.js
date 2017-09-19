@@ -41,19 +41,14 @@ exports.default = function (configDir) {
   middlewareFn(router);
 
   webpackDevMiddlewareInstance.waitUntilValid(function (stats) {
-    var data = {
-      publicPath: config.output.publicPath,
-      assets: stats.toJson().assetsByChunkName
-    };
-
     router.get('/', function (req, res) {
-      var headHtml = (0, _utils.getManagerHeadHtml)(configDir);
-      res.send((0, _index2.default)({ publicPath: publicPath, headHtml: headHtml }));
+      res.set('Content-Type', 'text/html');
+      res.sendFile(_path2.default.join(__dirname + '/public/index.html'));
     });
 
     router.get('/iframe.html', function (req, res) {
-      var headHtml = (0, _utils.getPreviewHeadHtml)(configDir);
-      res.send((0, _iframe2.default)((0, _extends3.default)({}, data, { headHtml: headHtml, publicPath: publicPath })));
+      res.set('Content-Type', 'text/html');
+      res.sendFile(_path2.default.join(__dirname + '/public/iframe.html'));
     });
 
     if (stats.toJson().errors.length) {
@@ -65,6 +60,10 @@ exports.default = function (configDir) {
 
   return router;
 };
+
+var _path = require('path');
+
+var _path2 = _interopRequireDefault(_path);
 
 var _express = require('express');
 
@@ -87,14 +86,6 @@ var _webpack4 = _interopRequireDefault(_webpack3);
 var _config = require('./config');
 
 var _config2 = _interopRequireDefault(_config);
-
-var _index = require('./index.html');
-
-var _index2 = _interopRequireDefault(_index);
-
-var _iframe = require('./iframe.html');
-
-var _iframe2 = _interopRequireDefault(_iframe);
 
 var _utils = require('./utils');
 

@@ -16,7 +16,22 @@ exports.default = function () {
       filename: 'static/[name].bundle.js',
       publicPath: '/'
     },
-    plugins: [new _webpack2.default.DefinePlugin((0, _utils.loadEnv)()), new _webpack2.default.HotModuleReplacementPlugin(), new _caseSensitivePathsWebpackPlugin2.default(), new _WatchMissingNodeModulesPlugin2.default(_utils.nodeModulesPaths), new _webpack2.default.ProgressPlugin(), new _webpack2.default.ContextReplacementPlugin(/angular(\\|\/)core(\\|\/)@angular/, _path2.default.resolve(__dirname, '../src'))],
+    plugins: [new _htmlWebpackPlugin2.default({
+      filename: 'index.html',
+      chunks: ['manager'],
+      data: {
+        managerHead: (0, _utils2.getManagerHeadHtml)((0, _utils.getConfigDir)()),
+        version: _package.version
+      },
+      template: require.resolve('../index.html.ejs')
+    }), new _htmlWebpackPlugin2.default({
+      filename: 'iframe.html',
+      excludeChunks: ['manager'],
+      data: {
+        previewHead: (0, _utils2.getPreviewHeadHtml)((0, _utils.getConfigDir)())
+      },
+      template: require.resolve('../iframe.html.ejs')
+    }), new _webpack2.default.DefinePlugin((0, _utils.loadEnv)()), new _webpack2.default.HotModuleReplacementPlugin(), new _caseSensitivePathsWebpackPlugin2.default(), new _WatchMissingNodeModulesPlugin2.default(_utils.nodeModulesPaths), new _webpack2.default.ProgressPlugin(), new _webpack2.default.ContextReplacementPlugin(/angular(\\|\/)core(\\|\/)@angular/, _path2.default.resolve(__dirname, '../src'))],
     module: {
       rules: [{
         test: /\.jsx?$/,
@@ -61,6 +76,10 @@ var _caseSensitivePathsWebpackPlugin = require('case-sensitive-paths-webpack-plu
 
 var _caseSensitivePathsWebpackPlugin2 = _interopRequireDefault(_caseSensitivePathsWebpackPlugin);
 
+var _htmlWebpackPlugin = require('html-webpack-plugin');
+
+var _htmlWebpackPlugin2 = _interopRequireDefault(_htmlWebpackPlugin);
+
 var _WatchMissingNodeModulesPlugin = require('./WatchMissingNodeModulesPlugin');
 
 var _WatchMissingNodeModulesPlugin2 = _interopRequireDefault(_WatchMissingNodeModulesPlugin);
@@ -70,5 +89,9 @@ var _utils = require('./utils');
 var _babel = require('./babel');
 
 var _babel2 = _interopRequireDefault(_babel);
+
+var _utils2 = require('../utils');
+
+var _package = require('../../../package.json');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }

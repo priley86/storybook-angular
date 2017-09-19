@@ -26,8 +26,7 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/* eslint no-underscore-dangle: 0 */
-// import Vue from 'vue';
+/* eslint-disable no-underscore-dangle */
 
 var ClientApi = function () {
   function ClientApi(_ref) {

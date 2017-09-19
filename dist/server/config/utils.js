@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.nodePaths = exports.nodeModulesPaths = exports.excludePaths = exports.includePaths = undefined;
+exports.getConfigDir = exports.nodePaths = exports.nodeModulesPaths = exports.excludePaths = exports.includePaths = undefined;
 
 var _keys = require('babel-runtime/core-js/object/keys');
 
@@ -56,3 +56,7 @@ function loadEnv() {
     'process.env': env
   };
 }
+
+var getConfigDir = exports.getConfigDir = function getConfigDir() {
+  return process.env.SBCONFIG_CONFIG_DIR || './.storybook';
+};

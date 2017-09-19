@@ -9,6 +9,8 @@ var _assign = require('babel-runtime/core-js/object/assign');
 
 var _assign2 = _interopRequireDefault(_assign);
 
+var _global = require('global');
+
 var _redux = require('redux');
 
 var _addons = require('@storybook/addons');
@@ -52,22 +54,19 @@ var _reducer2 = _interopRequireDefault(_reducer);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // check whether we're running on node/browser
-var _global = global,
-    navigator = _global.navigator; /* global window */
-
-var isBrowser = navigator && navigator.userAgent !== 'storyshots' && !(navigator.userAgent.indexOf('Node.js') > -1);
+var isBrowser = _global.navigator && _global.navigator.userAgent !== 'storyshots' && !(_global.navigator.userAgent.indexOf('Node.js') > -1);
 
 var storyStore = new _story_store2.default();
 var reduxStore = (0, _redux.createStore)(_reducer2.default);
 var context = { storyStore: storyStore, reduxStore: reduxStore };
 
 if (isBrowser) {
-  var queryParams = _qs2.default.parse(window.location.search.substring(1));
+  var queryParams = _qs2.default.parse(_global.window.location.search.substring(1));
   var channel = (0, _channelPostmessage2.default)({ page: 'preview' });
   channel.on('setCurrentStory', function (data) {
     reduxStore.dispatch((0, _actions.selectStory)(data.kind, data.story));
   });
-  (0, _assign2.default)(context, { channel: channel, window: window, queryParams: queryParams });
+  (0, _assign2.default)(context, { channel: channel, window: _global.window, queryParams: queryParams });
   _addons2.default.setChannel(channel);
   (0, _init2.default)(context);
 }

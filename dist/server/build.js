@@ -1,9 +1,4 @@
-#!/usr/bin/env node
 'use strict';
-
-var _extends2 = require('babel-runtime/helpers/extends');
-
-var _extends3 = _interopRequireDefault(_extends2);
 
 var _webpack = require('webpack');
 
@@ -41,14 +36,6 @@ var _config = require('./config');
 
 var _config2 = _interopRequireDefault(_config);
 
-var _index = require('./index.html');
-
-var _index2 = _interopRequireDefault(_index);
-
-var _iframe = require('./iframe.html');
-
-var _iframe2 = _interopRequireDefault(_iframe);
-
 var _utils = require('./utils');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -78,9 +65,10 @@ if (_commander2.default.enableDb || _commander2.default.dbPath) {
 var configDir = _commander2.default.configDir || './.storybook';
 var outputDir = _commander2.default.outputDir || './storybook-static';
 
-// create output directory (and the static dir) if not exists
-_shelljs2.default.rm('-rf', outputDir);
+// create output directory if not exists
 _shelljs2.default.mkdir('-p', _path2.default.resolve(outputDir));
+// clear the static dir
+_shelljs2.default.rm('-rf', _path2.default.resolve(outputDir, 'static'));
 _shelljs2.default.cp(_path2.default.resolve(__dirname, 'public/favicon.ico'), outputDir);
 
 // Build the webpack configuration using the `baseConfig`
@@ -104,18 +92,14 @@ if (_commander2.default.staticDir) {
 // compile all resources with webpack and write them to the disk.
 logger.log('Building storybook ...');
 (0, _webpack2.default)(config).run(function (err, stats) {
-  if (err) {
+  if (err || stats.hasErrors()) {
     logger.error('Failed to build the storybook');
-    logger.error(err.message);
+    // eslint-disable-next-line no-unused-expressions
+    err && logger.error(err.message);
+    // eslint-disable-next-line no-unused-expressions
+    stats.hasErrors() && stats.toJson().errors.forEach(function (e) {
+      return logger.error(e);
+    });
     process.exit(1);
   }
-
-  var data = {
-    publicPath: config.output.publicPath,
-    assets: stats.toJson().assetsByChunkName
-  };
-
-  // Write both the storybook UI and IFRAME HTML files to destination path.
-  _fs2.default.writeFileSync(_path2.default.resolve(outputDir, 'index.html'), (0, _index2.default)((0, _extends3.default)({}, data, { headHtml: (0, _utils.getManagerHeadHtml)(configDir) })));
-  _fs2.default.writeFileSync(_path2.default.resolve(outputDir, 'iframe.html'), (0, _iframe2.default)((0, _extends3.default)({}, data, { headHtml: (0, _utils.getPreviewHeadHtml)(configDir) })));
 });

@@ -95,6 +95,6 @@ var ConfigApi = function () {
     }
   }]);
   return ConfigApi;
-}(); /* eslint no-underscore-dangle: 0 */
+}(); /* eslint-disable no-underscore-dangle */
 
 exports.default = ConfigApi;

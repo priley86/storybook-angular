@@ -55,7 +55,7 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 var logger = console;
 
-_commander2.default.version(_package2.default.version).option('-p, --port [number]', 'Port to run Storybook (Required)', parseInt).option('-h, --host [string]', 'Host to run Storybook').option('-s, --static-dir <dir-names>', 'Directory where to load static files from').option('-c, --config-dir [dir-name]', 'Directory where to load Storybook configurations from').option('--https', 'Serve Storybook over HTTPS. Note: You must provide your own certificate information.').option('--ssl-ca <ca>', 'Provide an SSL certificate authority. (Optional with --https, required if using a self-signed certificate)', _utils.parseList).option('--ssl-cert <cert>', 'Provide an SSL certificate. (Required with --https)').option('--ssl-key <key>', 'Provide an SSL key. (Required with --https)').option('-d, --db-path [db-file]', 'DEPRECATED!').option('--enable-db', 'DEPRECATED!').parse(process.argv);
+_commander2.default.version(_package2.default.version).option('-p, --port [number]', 'Port to run Storybook (Required)', parseInt).option('-h, --host [string]', 'Host to run Storybook').option('-s, --static-dir <dir-names>', 'Directory where to load static files from').option('-c, --config-dir [dir-name]', 'Directory where to load Storybook configurations from').option('--https', 'Serve Storybook over HTTPS. Note: You must provide your own certificate information.').option('--ssl-ca <ca>', 'Provide an SSL certificate authority. (Optional with --https, required if using a self-signed certificate)', _utils.parseList).option('--ssl-cert <cert>', 'Provide an SSL certificate. (Required with --https)').option('--ssl-key <key>', 'Provide an SSL key. (Required with --https)').option('--smoke-test', 'Exit after successful start').option('-d, --db-path [db-file]', 'DEPRECATED!').option('--enable-db', 'DEPRECATED!').parse(process.argv);
 
 logger.info(_chalk2.default.bold(_package2.default.name + ' v' + _package2.default.version) + _chalk2.default.reset('\n'));
 
@@ -168,6 +168,12 @@ var serverListening = new _promise2.default(function (resolve, reject) {
 _promise2.default.all([_middleware.webpackValid, serverListening]).then(function () {
   var address = 'http://' + (_commander2.default.host || 'localhost') + ':' + _commander2.default.port + '/';
   logger.info('Storybook started on => ' + _chalk2.default.cyan(address) + '\n');
+  if (_commander2.default.smokeTest) {
+    process.exit(0);
+  }
 }).catch(function (error) {
-  return logger.error(error);
+  logger.error(error);
+  if (_commander2.default.smokeTest) {
+    process.exit(1);
+  }
 });
