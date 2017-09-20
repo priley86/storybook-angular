@@ -44,17 +44,20 @@ export default function() {
         template: require.resolve('../iframe.html.ejs'),
       }),
       new webpack.DefinePlugin(loadEnv({ production: true })),
-      new webpack.optimize.UglifyJsPlugin({
-        compress: {
-          screw_ie8: true,
-          warnings: false,
-        },
-        mangle: false,
-        output: {
-          comments: false,
-          screw_ie8: true,
-        },
-      }),
+      // uglifyjs plugin does not currently support es6, which is required to load
+      // native-shim.js polyfill
+      // https://github.com/angular/angular-cli/issues/7509
+      // new webpack.optimize.UglifyJsPlugin({
+      //   compress: {
+      //     screw_ie8: true,
+      //     warnings: false,
+      //   },
+      //   mangle: false,
+      //   output: {
+      //     comments: false,
+      //     screw_ie8: true,
+      //   },
+      // }),
       new webpack.ContextReplacementPlugin(
         /angular(\\|\/)core(\\|\/)@angular/,
         path.resolve(__dirname, '../src')
