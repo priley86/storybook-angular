@@ -18,7 +18,7 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/* eslint no-underscore-dangle: 0 */
+/* eslint-disable no-underscore-dangle */
 
 var count = 0;
 

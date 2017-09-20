@@ -24,12 +24,9 @@ exports.default = function (configDir) {
   var finalConfig = babelConfig || _babel2.default;
   // Ensure plugins are defined or fallback to an array to avoid empty values.
   var babelConfigPlugins = finalConfig.plugins || [];
-  var extraPlugins = [[require.resolve('babel-plugin-react-docgen'), {
-    DOC_GEN_COLLECTION_NAME: 'STORYBOOK_REACT_CLASSES'
-  }]];
   // If `babelConfigPlugins` is not an `Array`, calling `concat` will inject it
   // as a single value, if it is an `Array` it will be spreaded.
-  finalConfig.plugins = [].concat(babelConfigPlugins, extraPlugins);
+  finalConfig.plugins = [].concat(babelConfigPlugins);
 
   return finalConfig;
 };

@@ -23,7 +23,22 @@ exports.default = function () {
       // relative URLs works always.
       publicPath: ''
     },
-    plugins: [new _webpack2.default.DefinePlugin((0, _utils.loadEnv)({ production: true })), new _webpack2.default.optimize.UglifyJsPlugin({
+    plugins: [new _htmlWebpackPlugin2.default({
+      filename: 'index.html',
+      chunks: ['manager'],
+      data: {
+        managerHead: (0, _utils2.getManagerHeadHtml)((0, _utils.getConfigDir)()),
+        version: _package.version
+      },
+      template: require.resolve('../index.html.ejs')
+    }), new _htmlWebpackPlugin2.default({
+      filename: 'iframe.html',
+      excludeChunks: ['manager'],
+      data: {
+        previewHead: (0, _utils2.getPreviewHeadHtml)((0, _utils.getConfigDir)())
+      },
+      template: require.resolve('../iframe.html.ejs')
+    }), new _webpack2.default.DefinePlugin((0, _utils.loadEnv)({ production: true })), new _webpack2.default.optimize.UglifyJsPlugin({
       compress: {
         screw_ie8: true,
         warnings: false
@@ -33,7 +48,7 @@ exports.default = function () {
         comments: false,
         screw_ie8: true
       }
-    })],
+    }), new _webpack2.default.ContextReplacementPlugin(/angular(\\|\/)core(\\|\/)@angular/, _path2.default.resolve(__dirname, '../src'))],
     module: {
       rules: [{
         test: /\.jsx?$/,
@@ -41,6 +56,13 @@ exports.default = function () {
         query: _babel2.default,
         include: _utils.includePaths,
         exclude: _utils.excludePaths
+      }, {
+        test: /\.ts?$/,
+        loaders: [require.resolve('ts-loader'), require.resolve('angular2-template-loader')]
+      }, {
+        test: /\.(html|css)$/,
+        loader: 'raw-loader',
+        exclude: /\.async\.(html|css)$/
       }]
     },
     resolve: {
@@ -64,10 +86,18 @@ var _webpack = require('webpack');
 
 var _webpack2 = _interopRequireDefault(_webpack);
 
+var _htmlWebpackPlugin = require('html-webpack-plugin');
+
+var _htmlWebpackPlugin2 = _interopRequireDefault(_htmlWebpackPlugin);
+
 var _babel = require('./babel.prod');
 
 var _babel2 = _interopRequireDefault(_babel);
 
 var _utils = require('./utils');
+
+var _utils2 = require('../utils');
+
+var _package = require('../../../package.json');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
