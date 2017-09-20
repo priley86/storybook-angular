@@ -38,17 +38,22 @@ exports.default = function () {
         previewHead: (0, _utils2.getPreviewHeadHtml)((0, _utils.getConfigDir)())
       },
       template: require.resolve('../iframe.html.ejs')
-    }), new _webpack2.default.DefinePlugin((0, _utils.loadEnv)({ production: true })), new _webpack2.default.optimize.UglifyJsPlugin({
-      compress: {
-        screw_ie8: true,
-        warnings: false
-      },
-      mangle: false,
-      output: {
-        comments: false,
-        screw_ie8: true
-      }
-    }), new _webpack2.default.ContextReplacementPlugin(/angular(\\|\/)core(\\|\/)@angular/, _path2.default.resolve(__dirname, '../src'))],
+    }), new _webpack2.default.DefinePlugin((0, _utils.loadEnv)({ production: true })),
+    // uglifyjs plugin does not currently support es6, which is required to load
+    // native-shim.js polyfill
+    // https://github.com/angular/angular-cli/issues/7509
+    // new webpack.optimize.UglifyJsPlugin({
+    //   compress: {
+    //     screw_ie8: true,
+    //     warnings: false,
+    //   },
+    //   mangle: false,
+    //   output: {
+    //     comments: false,
+    //     screw_ie8: true,
+    //   },
+    // }),
+    new _webpack2.default.ContextReplacementPlugin(/angular(\\|\/)core(\\|\/)@angular/, _path2.default.resolve(__dirname, '../src'))],
     module: {
       rules: [{
         test: /\.jsx?$/,
